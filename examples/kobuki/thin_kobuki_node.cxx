@@ -186,6 +186,7 @@ try {
 	int count = 0;
 
         display_mallinfo();
+
   	while( true ){ // ros::ok() did not work on Olimex with micro-ROS
 		count++;
 	      uros_time_t timestamp;

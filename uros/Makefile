@@ -44,17 +44,18 @@ colcon_compile:
 		sed "s/@ARCH_CPU_FLAGS@/\"$(ARCHCPUFLAGS)\"/g" |\
 		sed "s/@ARCH_OPT_FLAGS@/\"$(ARCHOPTIMIZATION)\"/g" \
 		> arm_toolchain.cmake
-	$(Q) cd $(UROS_DIR); \
+	cd $(UROS_DIR); \
 		colcon build \
 			--packages-ignore-regex=.*_cpp \
 			--cmake-args \
+			-G Ninja \
 			-DBUILD_SHARED_LIBS=OFF \
 			-DCMAKE_POSITION_INDEPENDENT_CODE=ON \
 			-DBUILD_TESTING=OFF \
 			-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
 			-DCMAKE_TOOLCHAIN_FILE=$(APPDIR)/uros/arm_toolchain.cmake \
 			-DCMAKE_VERBOSE_MAKEFILE=ON \
-
+	
 install: 
 
 context: colcon_compile
