@@ -178,6 +178,8 @@ try {
 			PRINT_RCL_ERROR(rclc_init, rcl_init);
 		}
 
+		rcl_init_options_fini(&init_options);
+
 		//rcl_init_options_fini(&initOptions);
 	  // note: rcl_init_options_init also does the same as this function
 		//       that is: initOptions->imple->rmw_init_options = rmw_get_zero_initialized_init_options()
@@ -309,7 +311,7 @@ try {
 				// by replacing 'return' in error detection parts rclc_spin_node_once  by a 'break')
 				
 				do {
-						uint32_t timeout_ms = 10;
+					uint32_t timeout_ms = 10;
 
 					// get empty wait set
 					rcl_wait_set_t wait_set = rcl_get_zero_initialized_wait_set();
