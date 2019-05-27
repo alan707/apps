@@ -140,7 +140,7 @@ _rclc_spin_node_exit(rcl_wait_set_t * wait_set)
 {
   rcl_ret_t rc = rcl_wait_set_fini(wait_set);
   if (rc != RCL_RET_OK) {
-    PRINT_RCL_ERROR(rclc_spin_node, rcl_wait_set_fini);
+    PRINT_RCL_ERROR(spin_node, rcl_wait_set_fini);
   }
 }
 /* END defines and functions from rclc layer (functions.c) */
@@ -168,14 +168,14 @@ try {
     init_options = rcl_get_zero_initialized_init_options();
     rc = rcl_init_options_init(&init_options, rcl_get_default_allocator());
     if (rc != RCL_RET_OK) {
-     PRINT_RCL_ERROR(rclc_init, rcl_init_options_init);
+     PRINT_RCL_ERROR(init, rcl_init_options_init);
     }
 
 		context = rcl_get_zero_initialized_context();
 
 		rc = rcl_init(argc, argv, &init_options, &context);
 		if (rc != RCL_RET_OK) {
-			PRINT_RCL_ERROR(rclc_init, rcl_init);
+			PRINT_RCL_ERROR(init, rcl_init);
 		}
 
 		rcl_init_options_fini(&init_options);
@@ -194,7 +194,7 @@ try {
 
     rc = rcl_node_init(&node, "free_kobuki_node", "", &context, &node_ops);
 		if (rc != RCL_RET_OK) {
-			PRINT_RCL_ERROR(rclc_create_node, rcl_node_init);
+			PRINT_RCL_ERROR(create_node, rcl_node_init);
 		} else {
 
 			//create publisher
@@ -212,7 +212,7 @@ try {
 				&pub_opt);
 
 			if (rc != RCL_RET_OK) {
-				PRINT_RCL_ERROR(rclc_create_publisher, rcl_publisher_init);
+				PRINT_RCL_ERROR(create_publisher, rcl_publisher_init);
 				printf("Failed to create publisher: %s.\n", pose_topic);
 				return -1;
 			} else {
@@ -233,7 +233,7 @@ try {
 				&subscription_ops);
 
 			if (rc != RCL_RET_OK) {
-				PRINT_RCL_ERROR(rclc_create_subscription, rcl_subscription_init);
+				PRINT_RCL_ERROR(create_subscription, rcl_subscription_init);
 				printf("Failed to create subscriber: cmd_vel.\n");
 				return -1;
 			} else {
@@ -317,14 +317,14 @@ try {
 					rcl_wait_set_t wait_set = rcl_get_zero_initialized_wait_set();
 					rc = rcl_wait_set_init(&wait_set, 1, 0, 0, 0, 0, rcl_get_default_allocator());
 					if (rc != RCL_RET_OK) {
-						PRINT_RCL_ERROR(rclc_spin_node, rcl_wait_set_init);
+						PRINT_RCL_ERROR(spin_node_once, rcl_wait_set_init);
 						break;
 					}
 
 					// set rmw fields to NULL
 					rc = rcl_wait_set_clear(&wait_set);
 					if (rc != RCL_RET_OK) {
-						PRINT_RCL_ERROR(rclc_spin_node, rcl_wait_set_clear_subscriptions);
+						PRINT_RCL_ERROR(spin_node_once, rcl_wait_set_clear_subscriptions);
 						_rclc_spin_node_exit(&wait_set);
 						break;
 					}
@@ -333,7 +333,7 @@ try {
 
  					rc = rcl_wait_set_add_subscription(&wait_set, &sub_cmd_vel, &index);
     			if (rc != RCL_RET_OK) {
-      			PRINT_RCL_ERROR(rclc_spin_node, rcl_wait_set_add_subscription);
+      			PRINT_RCL_ERROR(spin_node_once, rcl_wait_set_add_subscription);
       			_rclc_spin_node_exit(&wait_set);
       			break;
 					}
@@ -345,7 +345,7 @@ try {
 					}					
 
 					if (rc != RCL_RET_OK) {
-    				PRINT_RCL_ERROR(rclc_spin_node, rcl_wait);
+    				PRINT_RCL_ERROR(spin_node_once, rcl_wait);
     				_rclc_spin_node_exit(&wait_set);
     				break;
   				}
