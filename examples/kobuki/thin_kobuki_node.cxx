@@ -358,11 +358,11 @@ try {
 						rc = rcl_take(&sub_cmd_vel, &msg, &messageInfo);
 
 						if (rc != RCL_RET_OK) {
-							PRINT_RCL_ERROR(rclc_spin_node, rcl_take);
+							PRINT_RCL_ERROR(spin_node_once, rcl_take);
 							_rclc_spin_node_exit(&wait_set);
 							break;
 						}
-						rcl_subscription_fini(&sub_cmd_vel, &node);
+						//rcl_subscription_fini(&sub_cmd_vel, &node);
 
 						// call message callback
 						commandVelCallback( &msg );
@@ -370,9 +370,8 @@ try {
 					} else {
 						//sanity check
 						fprintf(stderr, "[rclc_spin_node] no subscription received.\n");
-    				_rclc_spin_node_exit(&wait_set);
 					}
-
+          rcl_wait_set_fini(&wait_set);
 				} while (0);
 			}        
 		}
