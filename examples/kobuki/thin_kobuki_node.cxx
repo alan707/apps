@@ -136,7 +136,7 @@ void commandVelCallback(const void * msgin){ //TwistConstPtr
 static
 inline
 void
-_rclc_spin_node_exit(rcl_wait_set_t * wait_set)
+_spin_node_exit(rcl_wait_set_t * wait_set)
 {
   rcl_ret_t rc = rcl_wait_set_fini(wait_set);
   if (rc != RCL_RET_OK) {
@@ -325,7 +325,7 @@ try {
 					rc = rcl_wait_set_clear(&wait_set);
 					if (rc != RCL_RET_OK) {
 						PRINT_RCL_ERROR(spin_node_once, rcl_wait_set_clear_subscriptions);
-						_rclc_spin_node_exit(&wait_set);
+						_spin_node_exit(&wait_set);
 						break;
 					}
 
@@ -334,19 +334,19 @@ try {
  					rc = rcl_wait_set_add_subscription(&wait_set, &sub_cmd_vel, &index);
     			if (rc != RCL_RET_OK) {
       			PRINT_RCL_ERROR(spin_node_once, rcl_wait_set_add_subscription);
-      			_rclc_spin_node_exit(&wait_set);
+      			_spin_node_exit(&wait_set);
       			break;
 					}
 
 					rc = rcl_wait(&wait_set, RCL_MS_TO_NS(timeout_ms));
 					if (rc == RCL_RET_TIMEOUT) {
-						_rclc_spin_node_exit(&wait_set);
+						_spin_node_exit(&wait_set);
 						break;
 					}					
 
 					if (rc != RCL_RET_OK) {
     				PRINT_RCL_ERROR(spin_node_once, rcl_wait);
-    				_rclc_spin_node_exit(&wait_set);
+    				_spin_node_exit(&wait_set);
     				break;
   				}
 
@@ -359,7 +359,7 @@ try {
 
 						if (rc != RCL_RET_OK) {
 							PRINT_RCL_ERROR(spin_node_once, rcl_take);
-							_rclc_spin_node_exit(&wait_set);
+							_spin_node_exit(&wait_set);
 							break;
 						}
 						//rcl_subscription_fini(&sub_cmd_vel, &node);
@@ -369,7 +369,7 @@ try {
 						
 					} else {
 						//sanity check
-						fprintf(stderr, "[rclc_spin_node] no subscription received.\n");
+						fprintf(stderr, "[spin_node_once] no subscription received.\n");
 					}
           rcl_wait_set_fini(&wait_set);
 				} while (0);
