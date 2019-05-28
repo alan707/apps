@@ -138,10 +138,10 @@ inline
 void
 _spin_node_exit(rcl_wait_set_t * wait_set)
 {
-  rcl_ret_t rc = rcl_wait_set_fini(wait_set);
-  if (rc != RCL_RET_OK) {
-    PRINT_RCL_ERROR(spin_node, rcl_wait_set_fini);
-  }
+    rcl_ret_t rc = rcl_wait_set_fini(wait_set);
+    if (rc != RCL_RET_OK) {
+        PRINT_RCL_ERROR(spin_node, rcl_wait_set_fini);
+    }
 }
 /* END defines and functions from rclc layer (functions.c) */
 
