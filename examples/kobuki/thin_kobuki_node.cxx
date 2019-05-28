@@ -236,7 +236,6 @@ try {
         std::string serial_device;
         std::string command_vel_topic;
 
-        
         serial_device     = "/dev/ttyS1";
         command_vel_topic = "cmd_vel";
 
@@ -260,40 +259,40 @@ try {
             robot.receiveData(timestamp);
 
             if (packet_count < robot.packetCount()) {
-                    packet_count = robot.packetCount();
+                packet_count = robot.packetCount();
 
-                    // send the odometry
-                    float x,y,theta, vx, vtheta;
-                    robot.getOdometry(x,y,theta,vx,vtheta);
-                    /*if((count % 10) == 0) {
-                            printf("x=%f, y=%f, theta=%f, vx=%f, vtheta=%f\n",(double) x, (double)y, (double)theta, (double)vx, vtheta);
-                    }*/
-                    pose.x = x;
-                    pose.y = y;
-                    pose.z = theta; // HACK!
-                    
-                    if((count % 5) == 0) {
+                // send the odometry
+                float x,y,theta, vx, vtheta;
+                robot.getOdometry(x,y,theta,vx,vtheta);
+                /*if((count % 10) == 0) {
+                        printf("x=%f, y=%f, theta=%f, vx=%f, vtheta=%f\n",(double) x, (double)y, (double)theta, (double)vx, vtheta);
+                }*/
+                pose.x = x;
+                pose.y = y;
+                pose.z = theta; // HACK!
 
-                            if (! &pub_odom ){
-                                fprintf(stderr, "[rcl_publish] null pointer to publisher");
-                                return RCL_RET_INVALID_ARGUMENT;
-                            }	
-                            rcl_publish( &pub_odom, (const void *) &pose);
-                    }
-        
-                    // imu data
-                    //float heading;
-                    //robot.getImu(heading, vtheta);
-                    //imu.header.seq = seq; //header.seq does not exist
-                    //imu.header.stamp = timestamp;
-                    //imu.orientation = tf::createQuaternionMsgFromRollPitchYaw(0.0, 0.0, heading);
-                    //imu.angular_velocity.z = vtheta;
-                    
-                    //rclc_publish( pub_imu, (const void *) &imu); 
-                    //printf("Sending imu\n");
-                    // debug - sending a twist message - because odom and imu data produce error messages in nsh shell as well as in ros2-environment
-                    //rclc_publish ( pub_twist, (const void *) & msg_twist);
-                    //printf("Sending kobuki_twist\n");
+                if((count % 5) == 0) {
+
+                        if (! &pub_odom ){
+                            fprintf(stderr, "[rcl_publish] null pointer to publisher");
+                            return RCL_RET_INVALID_ARGUMENT;
+                        }	
+                        rcl_publish( &pub_odom, (const void *) &pose);
+                }
+
+                // imu data
+                //float heading;
+                //robot.getImu(heading, vtheta);
+                //imu.header.seq = seq; //header.seq does not exist
+                //imu.header.stamp = timestamp;
+                //imu.orientation = tf::createQuaternionMsgFromRollPitchYaw(0.0, 0.0, heading);
+                //imu.angular_velocity.z = vtheta;
+
+                //rclc_publish( pub_imu, (const void *) &imu); 
+                //printf("Sending imu\n");
+                // debug - sending a twist message - because odom and imu data produce error messages in nsh shell as well as in ros2-environment
+                //rclc_publish ( pub_twist, (const void *) & msg_twist);
+                //printf("Sending kobuki_twist\n");
                 }
 
             //spin once
@@ -321,12 +320,11 @@ try {
                 }
 
                 size_t index = 0; // is never used - denotes the index of the subscription in the storage container
-
                 rc = rcl_wait_set_add_subscription(&wait_set, &sub_cmd_vel, &index);
-            if (rc != RCL_RET_OK) {
-            PRINT_RCL_ERROR(spin_node_once, rcl_wait_set_add_subscription);
-            _spin_node_exit(&wait_set);
-            break;
+                if (rc != RCL_RET_OK) {
+                    PRINT_RCL_ERROR(spin_node_once, rcl_wait_set_add_subscription);
+                    _spin_node_exit(&wait_set);
+                    break;
                 }
 
                 rc = rcl_wait(&wait_set, RCL_MS_TO_NS(timeout_ms));
@@ -341,40 +339,41 @@ try {
                 break;
             }
 
-                // if RET_OK => one subscription is received because only ONE subscription has been added
-                // just double check here.
-                if ( wait_set.subscriptions[0] ){
-                    geometry_msgs__msg__Twist msg;
-                    rmw_message_info_t        messageInfo;
-                    rc = rcl_take(&sub_cmd_vel, &msg, &messageInfo);
+            // if RET_OK => one subscription is received because only ONE subscription has been added
+            // just double check here.
+            if ( wait_set.subscriptions[0] ){
+                geometry_msgs__msg__Twist msg;
+                rmw_message_info_t        messageInfo;
+                rc = rcl_take(&sub_cmd_vel, &msg, &messageInfo);
 
-                    if (rc != RCL_RET_OK) {
-                        PRINT_RCL_ERROR(spin_node_once, rcl_take);
-                        _spin_node_exit(&wait_set);
-                        break;
-                    }
-                    //rcl_subscription_fini(&sub_cmd_vel, &node);
-
-                    // call message callback
-                    commandVelCallback( &msg );
-                    
-                } else {
-                    //sanity check
-                    fprintf(stderr, "[spin_node_once] no subscription received.\n");
+                if (rc != RCL_RET_OK) {
+                    PRINT_RCL_ERROR(spin_node_once, rcl_take);
+                    _spin_node_exit(&wait_set);
+                    break;
                 }
-        rcl_wait_set_fini(&wait_set);
+
+                // call message callback
+                commandVelCallback( &msg );
+                
+            } else {
+                //sanity check
+                fprintf(stderr, "[spin_node_once] no subscription received.\n");
+            }
+            rcl_wait_set_fini(&wait_set);
+            
             } while (0);
         }        
     }
 
-		rcl_node_fini( &node);
+    rcl_node_fini( &node);
 
 	} catch(const std::exception& ex) {
-		printf("%s\n", ex.what());
+        printf("%s\n", ex.what());
 	} catch(...) {
-		printf("Caught unknown error");
+        printf("Caught unknown error");
 	}
-  return 0;
+
+    return 0;
     
   } // main
 
