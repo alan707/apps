@@ -161,8 +161,7 @@ try {
     r = &robot;
     int result = 0;
     //rclc_init(argc, argv);
-    // rcl-port start
-	rcl_context_t      context;         //global static var in rcl
+    rcl_context_t      context;         //global static var in rcl
     rcl_init_options_t init_options;    //global static var in rcl
     rcl_ret_t          rc;
     init_options = rcl_get_zero_initialized_init_options();
@@ -178,17 +177,16 @@ try {
         PRINT_RCL_ERROR(init, rcl_init);
     }
 
-	rcl_init_options_fini(&init_options);
-
+    rcl_init_options_fini(&init_options);
     printf("Turtlebot2 embedded kobuki driver\n");
  
-		rcl_node_t node = rcl_get_zero_initialized_node();
+    rcl_node_t node = rcl_get_zero_initialized_node();
     rcl_node_options_t node_ops = rcl_node_get_default_options();
 
     rc = rcl_node_init(&node, "free_kobuki_node", "", &context, &node_ops);
-		if (rc != RCL_RET_OK) {
-			PRINT_RCL_ERROR(create_node, rcl_node_init);
-		} else {
+    if (rc != RCL_RET_OK) {
+        PRINT_RCL_ERROR(create_node, rcl_node_init);
+    } else {
 
 			//create publisher
 			const char* pose_topic = "robot_pose";
