@@ -161,31 +161,24 @@ try {
     r = &robot;
     int result = 0;
     //rclc_init(argc, argv);
-		// rcl-port start
-		rcl_context_t      context;         //global static var in rcl
+    // rcl-port start
+	rcl_context_t      context;         //global static var in rcl
     rcl_init_options_t init_options;    //global static var in rcl
-		rcl_ret_t          rc;
+    rcl_ret_t          rc;
     init_options = rcl_get_zero_initialized_init_options();
     rc = rcl_init_options_init(&init_options, rcl_get_default_allocator());
     if (rc != RCL_RET_OK) {
-     PRINT_RCL_ERROR(init, rcl_init_options_init);
+        PRINT_RCL_ERROR(init, rcl_init_options_init);
     }
 
-		context = rcl_get_zero_initialized_context();
+    context = rcl_get_zero_initialized_context();
 
-		rc = rcl_init(argc, argv, &init_options, &context);
-		if (rc != RCL_RET_OK) {
-			PRINT_RCL_ERROR(init, rcl_init);
-		}
+    rc = rcl_init(argc, argv, &init_options, &context);
+    if (rc != RCL_RET_OK) {
+        PRINT_RCL_ERROR(init, rcl_init);
+    }
 
-		rcl_init_options_fini(&init_options);
-
-		//rcl_init_options_fini(&initOptions);
-	  // note: rcl_init_options_init also does the same as this function
-		//       that is: initOptions->imple->rmw_init_options = rmw_get_zero_initialized_init_options()
-		//       why is this necessary in Ralph's example?
-
-    // rcl-port end
+	rcl_init_options_fini(&init_options);
 
     printf("Turtlebot2 embedded kobuki driver\n");
  
