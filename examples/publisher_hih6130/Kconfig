@@ -1,26 +1,26 @@
-config UROS_EXAMPLES_PUBLISHER
-	bool "uROS Publisher"
+config UROS_EXAMPLES_PUBLISHER_HIH6130
+	bool "uROS Publisher HIH6130"
 	default n
 	depends on UROS
 	---help---
-		Enable the publisher uROS example
+		Enable the publisher uROS example for HIH6130 sensor
 
-if UROS_EXAMPLES_PUBLISHER
+if UROS_EXAMPLES_PUBLISHER_HIH6130
 
-config UROS_EXAMPLES_PUBLISHER_PROGNAME
+config UROS_EXAMPLES_PUBLISHER_HIH6130_PROGNAME
 	string "Program name"
-	default "publisher"
+	default "publisher_hih6130"
 	depends on BUILD_KERNEL
 	---help---
 		This is the name of the program that will be use when the NSH ELF
 		program is installed.
 
-#config UROS_EXAMPLES_PUBLISHER_PRIORITY
-#	int "Publisher task priority"
+#config UROS_EXAMPLES_PUBLISHER_HIH6130_PRIORITY
+#	int "Publisher hih6130 task priority"
 #	default 100
 #
-#config UROS_EXAMPLES_PUBLISHER_STACKSIZE
-#	int "Publisher stack size"
+#config UROS_EXAMPLES_PUBLISHER_HIH6130_STACKSIZE
+#	int "Publisher hih6130 stack size"
 #	default 2048
 
 endif
