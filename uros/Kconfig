@@ -11,8 +11,8 @@ config UROS
 if UROS
 
 config UROS_DIR
-    string "micro-ROS workspace (relative to NuttX)"
-    default "../uros_ws/"
+    string "micro-ROS workspace (relative to apps path)"
+    default "uros"
     ---help---
 	Location of the micro-ROS workspace.
 
